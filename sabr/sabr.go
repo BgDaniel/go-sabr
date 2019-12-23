@@ -7,7 +7,7 @@ import(
 
 type SimulationConfig struct {
 	NumberSimus, TimeSteps int
-	time float64
+	Time float64
 }
 
 func NewSimulationConfig(numberSimus int, timeSteps int, time float64) *SimulationConfig {
@@ -16,8 +16,8 @@ func NewSimulationConfig(numberSimus int, timeSteps int, time float64) *Simulati
 }
 
 type SABR0 struct {
-	S0, sigma0, volvol, correl float64
-	simuConfig SimulationConfig
+	S0, Sigma0, VolVol, Correl float64
+	SimuConfig SimulationConfig
 }
 
 func NewSABR0(S0 float64, sigma0 float64, volvol float64, correl float64, simuConfig SimulationConfig) *SABR0 {
@@ -25,12 +25,12 @@ func NewSABR0(S0 float64, sigma0 float64, volvol float64, correl float64, simuCo
 	return &sabr0
 }	
 
-func (sabr0 *SABR0) generatePaths() ([][]float64, [][]float64) {
-	var numberSimus = sabr0.simuConfig.NumberSimus
-	var timeSteps = sabr0.simuConfig.TimeSteps
+func (sabr0 *SABR0) GeneratePaths() ([][]float64, [][]float64) {
+	var numberSimus = sabr0.SimuConfig.NumberSimus
+	var timeSteps = sabr0.SimuConfig.TimeSteps
 	var pathsS = make([][]float64, numberSimus)
 	var pathsSigma = make([][]float64, numberSimus)
-	var dt = sabr0.simuConfig.time / float64(timeSteps)
+	var dt = sabr0.SimuConfig.Time / float64(timeSteps)
 	var dt_sqrt = math.Sqrt(dt)
 	var dWS, dWSigma = sabr0.generateDWt()
 
@@ -40,11 +40,11 @@ func (sabr0 *SABR0) generatePaths() ([][]float64, [][]float64) {
 
 		// initialize
 		pathsS[iSimu][0] = sabr0.S0
-		pathsSigma[iSimu][0] = sabr0.volvol
+		pathsSigma[iSimu][0] = sabr0.VolVol
 
 		for iTime := 1; iTime < timeSteps; iTime++ {
 			pathsS[iSimu][iTime] += pathsSigma[iSimu][iTime - 1] * dt_sqrt * dWS[iSimu][iTime]
-			pathsSigma[iSimu][iTime] = pathsSigma[iSimu][iTime - 1] * sabr0.volvol * dt_sqrt * dWSigma[iSimu][iTime]
+			pathsSigma[iSimu][iTime] = pathsSigma[iSimu][iTime - 1] * sabr0.VolVol * dt_sqrt * dWSigma[iSimu][iTime]
 		}
 	}
 
@@ -52,8 +52,8 @@ func (sabr0 *SABR0) generatePaths() ([][]float64, [][]float64) {
 }
 
 func (sabr0 *SABR0) generateDWt() ([][]float64, [][]float64){
-	var numberSimus = sabr0.simuConfig.NumberSimus
-	var timeSteps = sabr0.simuConfig.TimeSteps
+	var numberSimus = sabr0.SimuConfig.NumberSimus
+	var timeSteps = sabr0.SimuConfig.TimeSteps
 	var dWS = make([][]float64, numberSimus)
 	var dWSigma = make([][]float64, numberSimus)
 	
@@ -77,7 +77,7 @@ func main() {
 	var correl = .0
 
 	sabr0 := SABR0{S0, sigma0, volvol, correl, simuConfig}
-	sabr0.generatePaths()
+	sabr0.GeneratePaths()
 
 }
 
