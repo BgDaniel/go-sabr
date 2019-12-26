@@ -29,8 +29,8 @@ func main() {
 
 	var x, cdfSTerminal, cdfSigmaTerminal = reflection0.CalcTerminalDistr(sabr0, pathsS, pathsSigma, .0001, .0, 5.0)
 	var _, cdfSMirroredTerminal, cdfSigmaMirroredTerminal = reflection0.CalcTerminalDistr(sabr0, pathsSMirrored, pathsSigmaMirrored, .0001, .0, 5.0)
-	plot.SaveToDataFile(x, cdfSTerminal, cdfSMirroredTerminal, "plot_data/distr_S_T_mirrored.data")
-	plot.SaveToDataFile(x, cdfSigmaTerminal, cdfSigmaMirroredTerminal, "plot_data/distr_Sigma_T_mirrored.data")
+	plot.SaveToDataFile(x, cdfSTerminal, cdfSMirroredTerminal, "plot_data/terminal_distr/distr_S_T_mirrored.data")
+	plot.SaveToDataFile(x, cdfSigmaTerminal, cdfSigmaMirroredTerminal, "plot_data/terminal_distr/distr_Sigma_T_mirrored.data")
 
 	reflection1 := refl.Reflection{-0.5, .3, volvol}
 	var pathsSReflected, pathsSigmaReflected = reflection1.ReflectPaths(sabr0, pathsS, pathsSigma)
@@ -38,8 +38,8 @@ func main() {
 	//distrSigmaReflected := cumu.NewDistr(pathsSigmaReflected, order)
 
 	var _, cdfSReflectedTerminal, cdfSigmaReflectedTerminal = reflection1.CalcTerminalDistr(sabr0, pathsSReflected, pathsSigmaReflected, .0001, .0, 5.0)
-	plot.SaveToDataFile(x, cdfSTerminal, cdfSReflectedTerminal, "plot_data/distr_S_T_reflected.data")
-	plot.SaveToDataFile(x, cdfSigmaTerminal, cdfSigmaReflectedTerminal, "plot_data/distr_Sigma_T_reflected.data")
+	plot.SaveToDataFile(x, cdfSTerminal, cdfSReflectedTerminal, "plot_data/terminal_distr/distr_S_T_reflected.data")
+	plot.SaveToDataFile(x, cdfSigmaTerminal, cdfSigmaReflectedTerminal, "plot_data/terminal_distr/distr_Sigma_T_reflected.data")
 
 	/*
 		for k := 1; k <= order; k++ {
@@ -59,7 +59,7 @@ func main() {
 
 	distrIn := reflection1.CalcDistrIn(sabr0, pathsS, pathsSigma)
 	distrTouched := reflection1.CalcDistrTouch(sabr0, pathsS, pathsSigma)
-	plot.SaveToDataFile(times, distrIn, distrTouched, "plot_data/absor_distr.data")
+	plot.SaveToDataFile(times, distrIn, distrTouched, "plot_data/absor_distr/absor_distr.data")
 
 	fmt.Println("Computation finished.")
 }
